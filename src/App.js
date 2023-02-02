@@ -19,14 +19,14 @@ const Food = (props) => {
 
 const Snake = (props) => {
   const { coordinates, snakeLength } = props;
-  const snakeSkin = coordinates.map(function (coordinate, index) {
-    if (index ===  snakeLength-1) {
-      return <div className="snake-body red" style={{top: coordinate.longitude, left: coordinate.latitude}} key={index} />
-    }else{
-       return <div className="snake-body" style={{top: coordinate.longitude, left: coordinate.latitude}} key={index} />
-    }
-  });
-  return snakeSkin
+  // const snakeSkin = coordinates.map(function (coordinate, index) {
+  //   if (index ===  snakeLength-1) {
+  //     return <div className="snake-body red" style={{top: coordinate.longitude, left: coordinate.latitude}} key={index} />
+  //   }else{
+  //      return <div className="snake-body" style={{top: coordinate.longitude, left: coordinate.latitude}} key={index} />
+  //   }
+  // });
+  return <div className="snake-body" style={{top: 0, left: 0}} />
 }
 
 function App() {
@@ -40,21 +40,28 @@ function App() {
     latitude: 0
   }])
 
-  const [ snakeLength, setSnakeLength ] = useState(5)
+  const [ snakeLength, setSnakeLength ] = useState(1)
 
   useEffect(() => {
     window.addEventListener('keydown', moveSnake);
-    if(snakePosition[0].longitude === foodPosition.longitude && snakePosition[0].latitude === foodPosition.latitude) {
-      setSnakeLength(snakeLength + 1)
+    // if(snakePosition[0].longitude === foodPosition.longitude && snakePosition[0].latitude === foodPosition.latitude) {
+    //   setSnakeLength(snakeLength + 1)
+    //   snakePosition.unshift({
+    //     longitude: snakePosition[0].longitude - CUBE_RATIO,
+    //     latitude: snakePosition[0].latitude
+    //   })
+    //   setSnakePosition(snakePosition)
+    //   setfoodPosition({
+    //     longitude: Math.floor(Math.random() * (BOX_RATIO/CUBE_RATIO)) * CUBE_RATIO,
+    //     latitude: Math.floor(Math.random() * (BOX_RATIO/CUBE_RATIO)) * CUBE_RATIO
+    //   })
+    // }
+
+    setSnakeLength(snakeLength + 1)
       snakePosition.unshift({
-        longitude: snakePosition[0].longitude,
+        longitude: snakePosition[0].longitude - CUBE_RATIO,
         latitude: snakePosition[0].latitude
       })
-      setfoodPosition({
-        longitude: Math.floor(Math.random() * (BOX_RATIO/CUBE_RATIO)) * CUBE_RATIO,
-        latitude: Math.floor(Math.random() * (BOX_RATIO/CUBE_RATIO)) * CUBE_RATIO
-      })
-    }
     return () => {
       window.removeEventListener('keydown', moveSnake);
     }
@@ -64,12 +71,11 @@ function App() {
     console.log(head);
     let my_snake = [];
       snakePosition.forEach((element, index) => {
-        if(index === snakeLength-1) {
-          my_snake.push(head)
-        }else{
+        if(snakeLength[index+1] !== undefined){
           my_snake.push(snakePosition[index+1])
         }
       });
+      my_snake.push(head)
       return my_snake;
   }
 
@@ -125,7 +131,6 @@ function App() {
     }
   }
   
-
   return (
     <div className="snake-box">
         <Cubes />
